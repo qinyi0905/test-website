@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [v20.19.6]
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm run build
+    
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file docker/Dockerfile --tag test-website:$(date +%s)
