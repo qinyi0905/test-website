@@ -34,6 +34,9 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t k8s-harbor.register.com/test-website/test-website:$(date +%Y%m%d%H%M%S) -f docker/Dockerfile .          
-          docker push k8s-harbor.register.com/test-website/test-website:$(date +%Y%m%d%H%M%S)
+          TAG=$(date +%Y%m%d%H%M%S)
+          echo "Building image with tag: $TAG"
+          
+          docker build -t k8s-harbor.register.com/test-website/test-website:$TAG -f docker/Dockerfile .          
+          docker push k8s-harbor.register.com/test-website/test-website:$TAG
           
