@@ -14,5 +14,3 @@ spec:
       containers:
       - name: test-website
         image: k8s-harbor.register.com/test-website/test-website:latest
-      imagePullSecrets:
-      - name: harbor-registry
