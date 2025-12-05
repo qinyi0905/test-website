@@ -42,3 +42,5 @@ jobs:
           docker build -t k8s-harbor.register.com/test-website/test-website:$TAG -f docker/Dockerfile .          
           docker push k8s-harbor.register.com/test-website/test-website:$TAG
           
+          docker tag k8s-harbor.register.com/test-website/test-website:$TAG k8s-harbor.register.com/test-website/test-website:latest
+          docker push k8s-harbor.register.com/test-website/test-website:latest
