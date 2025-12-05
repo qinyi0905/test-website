@@ -2,6 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - deployment.yaml
+- service.yaml
+- ingress.yaml
 images:
 - name: k8s-harbor.register.com/test-website/test-website
   newTag: latest
+
+patches:
+- target:
+    kind: Ingress
+    name: test-website
+  patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: test.website.localhost.com
