@@ -3,7 +3,13 @@ kind: Deployment
 metadata:
   name: test-website
 spec:
+  selector:
+    matchLabels:
+      app: test-website
   template:
+    metadata:
+      labels:
+        app: test-website
     spec:
       containers:
       - name: test-website
