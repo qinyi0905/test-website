@@ -34,6 +34,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          docker rmi -f $(docker images | grep 'test-website' | awk '{print $2}') || echo "Not Found"
+          
           TAG=$(date +%Y%m%d%H%M%S)
           echo "Building image with tag: $TAG"
           
