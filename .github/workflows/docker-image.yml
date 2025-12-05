@@ -7,23 +7,33 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: github-runner
-    
-    strategy:
-      matrix:
-        node-version: [v20.19.6]
-    
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm run build
-    
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file docker/Dockerfile --tag test-website:$(date +%s)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.19.6'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Login to Harbor
+        uses: docker/login-action@v2
+        with:
+          registry: k8s-harbor.register.com
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t k8s-harbor.register.com/test-website/test-website:$(date +%Y%m%d%H%M%S) -f docker/Dockerfile .          
+          docker push k8s-harbor.register.com/test-website/test-website:$(date +%Y%m%d%H%M%S)
+          
